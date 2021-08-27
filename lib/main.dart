@@ -79,25 +79,28 @@ Widget calendar() {
             tagForChildren: RenderViewport.useTwoPaneSemantics,
             child: Stack(
               children: [
-                Viewport(
-                  offset: offset,
-                  slivers: [
-                    SliverList(
-                      delegate: SliverChildListDelegate([
-                          Container(
-                            // height: double.infinity,
-                            height: 1000,
-                            width: double.infinity,
-                            child: RepaintBoundary(
-                              child: CustomPaint(
-                                painter: TimeSheets(timeLine, cal.Calendar.daysOnScreen)
-                              )
-                            ),
-                          )                          
-                        ]
+                Padding(
+                  padding: EdgeInsets.only(top: 55),
+                  child: Viewport(
+                    offset: offset,
+                    slivers: [
+                      SliverList(
+                        delegate: SliverChildListDelegate([
+                            Container(
+                              // height: double.infinity,
+                              height: 1040,
+                              width: double.infinity,
+                              child: RepaintBoundary(
+                                child: CustomPaint(
+                                  painter: TimeSheets(timeLine, cal.Calendar.daysOnScreen)
+                                )
+                              ),
+                            )                          
+                          ]
+                        )
                       )
-                    )
-                  ],
+                    ],
+                  )
                 ),
                 Row(
                   children: [
@@ -115,19 +118,22 @@ Widget calendar() {
                               child: Stack(
                                 children: [
                                   daysLine(timeLine, selectedDays),
-                                  Viewport(
-                                    offset: offset,
-                                    slivers: [
-                                      SliverList(
-                                        delegate: SliverChildListDelegate([
-                                            autow(
-                                              (value) => renderEvents(timeLine, selectedDays, cal.Calendar.eventsForDays(selectedDays)),
-                                              cal.Calendar.onEventChanges
-                                            )                           
-                                          ]
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 55),
+                                    child: Viewport(
+                                      offset: offset,
+                                      slivers: [
+                                        SliverList(
+                                          delegate: SliverChildListDelegate([
+                                              autow(
+                                                (value) => renderEvents(timeLine, selectedDays, cal.Calendar.eventsForDays(selectedDays)),
+                                                cal.Calendar.onEventChanges
+                                              )                           
+                                            ]
+                                          )
                                         )
-                                      )
-                                    ],
+                                      ],
+                                    )
                                   )
                                 ]
                               )
@@ -194,8 +200,13 @@ Widget renderEvents(timeLine, selectedDays, events) {
         for(var e in eventsWithCoords)
         Positioned(
           top: e[1],
-          left: e[0],
-          child: Container(child: Text("love"))
+          left: e[0] + 60,
+          child: InkWell(
+            child: Container(
+              child: Text("date"),
+            ),
+            onTap: () => print("ststs"),
+          )
         )
       ]
     )
@@ -206,7 +217,7 @@ class TimeSheets extends CustomPainter {
 
   int daysOnSceen;
   List<TimeOfDay> timeLine;
-  static double lineWidth = 0, cellHeight = 40, paddingRight = 50, paddingLeft = 5, paddingTop = 8 + 65;
+  static double lineWidth = 0, cellHeight = 40, paddingRight = 50, paddingLeft = 5, paddingTop = 15;
   
   TimeSheets(this.timeLine, this.daysOnSceen);
   
