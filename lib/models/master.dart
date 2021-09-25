@@ -1,4 +1,5 @@
-
+import 'package:built_collection/built_collection.dart';
+import '../models.dart';
 
 
 class Master implements Doc {
@@ -17,9 +18,8 @@ class Master implements Doc {
   }); 
 
   String toString() {
-    var lName = or(lastName, '');
-    return "$firstName $lName";
+    return "$firstName ${lastName ?? ''}";
   }
   
-  BuiltSet<Event> eventsIn(Iterable<DateTime> dates) => eventsList;
+  // BuiltSet<Event> eventsIn(Iterable<DateTime> dates) => eventsList;
 }

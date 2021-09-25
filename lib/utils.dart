@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 // import './utils/rx_value.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'dart:math';
 
 
 
@@ -167,4 +168,17 @@ class DateRange {
       startFrom.add(Duration(days: i))
     );
   }
+}
+
+String genId() {
+  var rng = new Random();
+  return List.generate(12, (_) => rng.nextInt(100)).toString();
+}
+
+bool isNull(v) {
+  return (v == null);
+}
+
+bool notNull(v) {
+  return !isNull(v);
 }

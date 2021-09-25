@@ -30,6 +30,8 @@ dependencies:
   intl: ^0.17.0
   functional_listener: ^2.0.2
   built_collection: ^5.1.0
+  duration_picker: ^1.0.1
+  time: ^2.0.0
   flutter:
     sdk: flutter
 

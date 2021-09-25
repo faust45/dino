@@ -6,15 +6,25 @@ import 'models/calendar.dart';
 import 'dart:async';
 import 'dart:io';
 import 'models.dart';
+import 'models/master.dart';
 import 'utils.dart';
 
 
 var notifyAfterEvent = Map<Type, ValueNotifier>();
 
+mixin UIEventsDesc {
+  String get desc => "";
+  
+  String toString() {
+    return "${runtimeType} ${desc}";
+  }
+}
+
 abstract class UIEvent {
   
   void perform() {
   }
+
 }
 
 abstract class StateEvent {

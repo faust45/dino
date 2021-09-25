@@ -73,7 +73,7 @@ ValueListenableBuilder autob(f) {
 ValueListenableBuilder autow(f, rxval) {
   return ValueListenableBuilder(
     valueListenable: rxval,
-    builder: (context, value, child) => f(value) as Widget
+    builder: (ctx, value, child) => f(value, ctx) as Widget
   );
 } 
 
