@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../utils.dart';
+import '../models.dart';
+import '../models/master.dart';
 import './rx_value.dart';
+import 'package:built_collection/built_collection.dart';
 
 
 var textDateLabel = TextStyle(fontSize: 20);
@@ -64,7 +67,7 @@ class TextInp extends StatelessWidget {
     this.inp = ValueNotifier(null);
     this.error = ~(_) {
       return this.valid.map(
-        (v) => v(_(this.inp))
+        (v) => _(this.inp) != null ? v(_(this.inp)) : null
       ).firstWhere(notNull, orElse: () => null);
     };
   }
@@ -93,3 +96,91 @@ class TextInp extends StatelessWidget {
     );
   }
 } 
+
+Widget selectTags(ValueNotifier<BuiltSet> selected, BuiltSet source) {
+  var toggle = (tag) {
+    var coll = selected.value.toBuilder();
+    
+    if (selected.value.contains(tag)) {
+      coll.remove(tag);
+    } else {
+      coll.add(tag);
+    }
+    
+    selected.value = coll.build();
+  };
+
+  Widget tagsCloud(selected, ctx) {
+    return Wrap(
+      spacing: 8.0,
+      runSpacing: 4.0,
+      children: [
+        for(var tag in source)
+        InputChip(
+          label: Text(tag.name),
+          selected: selected.contains(tag),
+          onPressed: () => toggle(tag),
+        ),
+      ]
+    );
+  }
+
+  return autow(tagsCloud, selected);
+}
+
+CircleAvatar avatar(Master doc) {
+  return CircleAvatar(
+    backgroundColor: Colors.white,
+    // child: Image()
+  );
+}
+
+class FormInput {
+  Map<Symbol, ValueNotifier<String?>> _inputs = {};
+
+  FormInput();
+
+  ValueChanged<String> call(Symbol inputName) {
+    _inputs[inputName] ??= ValueNotifier<String?>(null);
+    
+    ValueChanged<String> handleInput = (value) {
+      _inputs[inputName]?.value = value;
+    };
+
+    return handleInput;
+  }
+
+  ValueNotifier<String?>? operator [](Symbol key) {
+    _inputs[key] ??= ValueNotifier<String?>(null);
+
+    return _inputs[key];
+  }
+}
+
+Future<dynamic> openDialog(ctx, widget) {
+  return showDialog(
+    context: ctx,
+    builder: (BuildContext ctx) =>
+    WillPopScope(
+      onWillPop: () async {
+        print("on pop");
+        // Navigator.pop(ctx);
+        return true;
+      },
+      child: Dialog(
+        child: Padding(
+          padding: EdgeInsets.only(left: 5, right: 5, bottom: 15, top: 15),
+          child: ConstrainedBox(
+            constraints: new BoxConstraints(
+              maxHeight: MediaQuery.of(ctx).size.height * 0.7,
+              maxWidth: MediaQuery.of(ctx).size.width * 0.8
+            ),
+            child: (widget is Function) ? widget(ctx) : widget
+            
+          )
+        )
+      )
+    )
+    
+  );
+}

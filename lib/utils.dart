@@ -95,25 +95,6 @@ class fmt {
   }
 }
 
-class FormInput {
-  Map _inputs = {};
-
-  FormInput();
-
-  ValueChanged<String> call(inputName) {
-    ValueChanged<String> handleInput = (dynamic value) {
-      _inputs[inputName] = value; 
-    };
-
-    return handleInput;
-  }
-
-  void operator [](key) {
-    return _inputs[key];
-  }
-}
-
-
 class Validator {
   static String? notEmpty(String? value) {
     if (value != null && value.isEmpty) {

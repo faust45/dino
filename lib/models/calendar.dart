@@ -8,6 +8,16 @@ import 'master.dart';
 import 'package:built_collection/built_collection.dart';
 
 
+
+class CalEventCancel with UIEventsDesc implements UIEvent {
+  
+  CalEventCancel();
+  
+  perform() {
+  }
+
+}
+
 class CalPageChanged with UIEventsDesc implements UIEvent {
   int page;
   

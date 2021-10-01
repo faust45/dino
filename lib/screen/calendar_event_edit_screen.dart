@@ -10,6 +10,7 @@ import '../models/calendar.dart' as cal;
 import '../utils/rx_value.dart';
 import '../utils/ui_helpers.dart';
 import 'package:time/time.dart';
+import 'package:built_collection/built_collection.dart';
 
 
 class CalendarEventEditScreen extends StatelessWidget {
@@ -85,7 +86,32 @@ Widget editEvent(e, ctx) {
             Text("master", style: textLabel),
           ]
         ),
+        SizedBox(height: 30),
         clientInput(ctx, event.client, AppState.clients.value),
+        SizedBox(height: 30),
+        servicesInput(ctx, event.services, event.master.services),
+        SizedBox(height: 30),
+        descInput(event.description),
+        SizedBox(height: 30),
+        Row(
+          children: [
+            Expanded(
+              child: SizedBox(
+                height: 35.0,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.red)
+                  ),
+                  child: Text("Cancel"),
+                  onPressed: () {
+                    emit(cal.CalEventCancel());
+                    Navigator.pop(ctx);
+                  }
+                )
+              )
+            )
+          ]
+        )
       ]
     )
   );
@@ -109,7 +135,7 @@ Widget clientInput(ctx, client, source) {
             ctx,
             filteredListView(
               source,
-              (filteredSource, _) =>
+              (filteredSource, ctx) =>
               ListView(
                 children: [
                   for(var p in filteredSource)
@@ -256,21 +282,80 @@ Widget durationInput(ctx, startAt, duration) {
   );
 }
 
-Future<dynamic> openDialog(ctx, widget) {
-  return showDialog(
-    context: ctx,
-    builder: (BuildContext ctx) =>
-    Dialog(
-      child: Padding(
-        padding: EdgeInsets.only(left: 10, right: 10, bottom: 15, top: 15),
-        child: ConstrainedBox(
-          constraints: new BoxConstraints(
-            maxHeight: MediaQuery.of(ctx).size.height * 0.7,
-            maxWidth: MediaQuery.of(ctx).size.width * 0.6
+Widget servicesInput(ctx, eventServices, masterServices) {
+  return InkWell(
+    child: Align(
+      alignment: Alignment.centerLeft,
+      child: Wrap(
+        spacing: 8.0,
+        runSpacing: 4.0,
+        children: [
+          Icon(Icons.topic_outlined),
+          if(eventServices.isEmpty)
+          Text(
+            "select services",
+            style: textLabelButton
           ),
-          child: widget
-        )
+          for(var tag in eventServices)
+          Chip(
+            label: Text(tag.name)
+          ),
+        ]
       )
-    )
+    ),
+    onTap: () async {
+      var tagsInp = ValueNotifier<BuiltSet>(eventServices);
+
+      var inp = await openDialog(ctx,
+        (ctx) => Column(
+          children: [
+            SizedBox(height: 40),
+            selectTags(tagsInp, masterServices),
+            Expanded(
+              child: SizedBox()
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 35.0,
+                    child: ElevatedButton(
+                      child: Text("Add"),
+                      onPressed: () => Navigator.pop(ctx, tagsInp.value),
+                    )
+                  )
+                )
+              ]
+            )
+          ]
+        )
+      );
+      
+      emit(cal.CalEventUpdate(services: inp));
+    }
+  );
+}
+
+Widget descInput(String desc) {
+  var descInp = TextInp(
+    value: desc,
+    maxLines: 3,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    ),
+    labelText: "Description",
+    keyboardType: TextInputType.multiline
+  );
+
+  descInp.inp.addListener(() =>
+    emit(cal.CalEventUpdate(description: descInp.inp.value))
+  );
+  
+  return Row(
+    children: [
+      Expanded(
+        child: descInp
+      ),
+    ]
   );
 }

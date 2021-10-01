@@ -15,15 +15,15 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             title: Text('Masters'),
-            // onTap: () => emit([Comp.Nav], IPage.Masters)
+            onTap: () => emit(AppPage(Pages.Masters))
           ),
           ListTile(
             title: Text('Clients'),
-            // onTap: () => emit([Comp.Nav], IPage.Clients)
+            onTap: () => emit(AppPage(Pages.Clients))
           ),
           ListTile(
             title: Text('Calendar'),
-            // onTap: () => emit([Comp.Nav], IPage.Cal)
+            onTap: () => emit(AppPage(Pages.Calendar))
           ),
           ListTile(
             title: Text('Services'),

@@ -6,9 +6,12 @@ import 'package:flutter/widgets.dart';
 import 'utils.dart';
 import 'state.dart';
 import 'models/calendar.dart' as cal;
+import 'models/master.dart';
 import 'utils/rx_value.dart';
 import 'screen/calendar_screen.dart';
 import 'screen/calendar_event_edit_screen.dart';
+import 'screen/masters/masters_screen.dart';
+import 'screen/masters/masters_edit_screen.dart';
 
 
 void main() {
@@ -43,11 +46,20 @@ class MyApp extends StatelessWidget {
 
 
 var pages = ~(_) {
-  return [
-    MaterialPage(child: CalendarScreen()),
-    if(_(cal.Calendar.selectedEvent) != null) 
-    MaterialPage(child: CalendarEventEditScreen())
-  ];
+  switch(_(AppState.mainPage)) {
+    case Pages.Masters:
+      return [
+        MaterialPage(child: MastersScreen()),
+        if(_(Masters.selected) != null) 
+        MaterialPage(child: MastersEditScreen())
+      ];
+    case Pages.Calendar:
+      return [
+        MaterialPage(child: CalendarScreen()),
+        if(_(cal.Calendar.selectedEvent) != null) 
+        MaterialPage(child: CalendarEventEditScreen())
+      ];
+  };
 };
 
 

@@ -50,6 +50,10 @@ class Service implements Doc {
       duration: duration ?? this.duration
     );
   }
+
+  String toString() {
+    return "Service(${id} ${name})";
+  }
 }
 
 class WorkingHours implements Comparable {

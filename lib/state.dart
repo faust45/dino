@@ -12,6 +12,26 @@ import 'utils.dart';
 
 var notifyAfterEvent = Map<Type, ValueNotifier>();
 
+enum Pages {
+  Masters,
+  Calendar,
+  Clients
+}
+
+class AppPage with UIEventsDesc implements UIEvent {
+  Pages page;
+  
+  AppPage(Pages this.page);
+  
+  perform() {
+    AppState.mainPage.value = page;
+  }
+  
+  String get desc => "${page}";
+
+}
+
+
 mixin UIEventsDesc {
   String get desc => "";
   
@@ -47,6 +67,7 @@ afterEvent(events, notifier) {
 
 
 class AppState {
+  static var mainPage = ValueNotifier<Pages>(Pages.Masters);
 
   static void init() {
     Calendar.init();
@@ -139,7 +160,7 @@ class AppState {
   );
 
   static var services = ValueNotifier(
-    Set<Service>.unmodifiable([
+    BuiltSet<Service>([
         Service(
           id: "1",
           cat: 'Стрижки', name: 'Укладка',

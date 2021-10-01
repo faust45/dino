@@ -61,28 +61,70 @@ class Cell<T> extends ChangeNotifier implements ValueListenable<T> {
   }
 }
 
+class AutoBuild<T> extends StatefulWidget {
+  const AutoBuild({
+    Key? key,
+    required this.valueListenable,
+    required this.builder,
+    this.child,
+  }) : assert(valueListenable != null),
+       assert(builder != null),
+       super(key: key);
 
-ValueListenableBuilder autob(f) {
-  var widget = Cell(f);
-  return ValueListenableBuilder(
-    valueListenable: widget,
-    builder: (context, value, child) => value
-  );
+  final ValueListenable<T> valueListenable;
+
+  final ValueWidgetBuilder<T> builder;
+
+  final Widget? child;
+
+  @override
+  State<StatefulWidget> createState() => _AutoBuildState<T>();
 }
 
-ValueListenableBuilder autow(f, rxval) {
-  return ValueListenableBuilder(
+class _AutoBuildState<T> extends State<AutoBuild<T>> {
+  late T value;
+
+  @override
+  void initState() {
+    super.initState();
+    value = widget.valueListenable.value;
+    widget.valueListenable.addListener(_valueChanged);
+  }
+
+  @override
+  void didUpdateWidget(AutoBuild<T> oldWidget) {
+    if (oldWidget.valueListenable != widget.valueListenable) {
+      oldWidget.valueListenable.removeListener(_valueChanged);
+      value = widget.valueListenable.value;
+      widget.valueListenable.addListener(_valueChanged);
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    widget.valueListenable.removeListener(_valueChanged);
+    super.dispose();
+  }
+
+  void _valueChanged() {
+    if(widget.valueListenable.value != null) {
+      setState(() { value = widget.valueListenable.value; });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.builder(context, value, widget.child);
+  }
+}
+
+AutoBuild autow(f, rxval) {
+  return AutoBuild(
     valueListenable: rxval,
     builder: (ctx, value, child) => f(value, ctx) as Widget
   );
 } 
-
-ValueListenableBuilder autowc(f, ctx, rxval) {
-  return ValueListenableBuilder(
-    valueListenable: rxval,
-    builder: (ctx, value, child) => f(ctx, value) as Widget
-  );
-}
 
 extension AB on Function {
   Cell operator ~() {
