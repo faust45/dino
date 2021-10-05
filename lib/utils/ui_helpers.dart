@@ -157,30 +157,46 @@ class FormInput {
   }
 }
 
-Future<dynamic> openDialog(ctx, widget) {
+Future<dynamic> openDialog(ctx, widget, {onDone}) async {
   return showDialog(
     context: ctx,
     builder: (BuildContext ctx) =>
-    WillPopScope(
-      onWillPop: () async {
-        print("on pop");
-        // Navigator.pop(ctx);
-        return true;
-      },
-      child: Dialog(
-        child: Padding(
-          padding: EdgeInsets.only(left: 5, right: 5, bottom: 15, top: 15),
-          child: ConstrainedBox(
-            constraints: new BoxConstraints(
-              maxHeight: MediaQuery.of(ctx).size.height * 0.7,
-              maxWidth: MediaQuery.of(ctx).size.width * 0.8
-            ),
-            child: (widget is Function) ? widget(ctx) : widget
-            
-          )
+    Dialog(
+      child: Padding(
+        padding: EdgeInsets.only(left: 5, right: 5, bottom: 15, top: 15),
+        child: ConstrainedBox(
+          constraints: new BoxConstraints(
+            maxHeight: MediaQuery.of(ctx).size.height * 0.7,
+            maxWidth: MediaQuery.of(ctx).size.width * 0.8
+          ),
+          child: Column(
+            children: [
+              (widget is Function) ? widget(ctx) : widget,
+              Expanded(child: SizedBox()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    child: Text("CANCEL"),
+                  ),
+                  SizedBox(width: 20),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+
+                      if(onDone != null) {
+                        onDone();
+                      }
+                    },
+                    child: Text("DONE"),
+                  )
+                ]
+              )
+            ]
+          )  
         )
       )
     )
-    
   );
 }

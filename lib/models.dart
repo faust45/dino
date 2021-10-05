@@ -56,7 +56,7 @@ class Service implements Doc {
   }
 }
 
-class WorkingHours implements Comparable {
+class WorkingHours implements Comparable, Doc {
   static DateFormat format = DateFormat('yy-MM-dd');
 
   DateTime date;

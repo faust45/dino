@@ -11,6 +11,7 @@ import '../../models/master.dart';
 import '../../models.dart';
 import '../../utils/rx_value.dart';
 import '../../utils/ui_helpers.dart';
+import './masters_working_hours_screen.dart';
 import 'package:built_collection/built_collection.dart';
 
 
@@ -35,7 +36,13 @@ class MastersEditScreen extends StatelessWidget {
         child: Form(
           key: formKey,
           onChanged: () {
-            formKey.currentState?.validate();
+            if(formKey.currentState != null) {
+              // bool isValid = formKey.currentState?.validate();
+              // if(isValid) {
+              //   // var values = formKey.currentState?.values;
+              //   // emit(MasterUpdate(firstName: ));
+              // }
+            }
           },
           child: autow(masterDetails, Masters.selected),
         )
@@ -68,7 +75,7 @@ Widget masterDetails(Master doc, ctx) {
             options: groupBy(AppState.services.value, (Service s) => s.cat),
           ),
           SizedBox(height: 50),
-          // workingHours(context, doc.workingHours7days),
+          workingHours(ctx, doc),
         ]
       ),
     )
@@ -76,8 +83,27 @@ Widget masterDetails(Master doc, ctx) {
   ;
 }
 
+Widget workingHours(ctx, Master doc) {
+  return Container(
+    height: 600.0,
+    child: PageView.builder(
+      itemBuilder: (ctx, page) {
+        var startDate = DateRange.from(today())
+        .skip(page * 7)
+        .first;
+
+        print(startDate);
+        return autow((value, ctx) {
+            var workingHours = Masters.masterWorkingHours7days(startDate);
+            return workingHoursWeek(ctx, workingHours);
+        }, Masters.onWorkingHoursUpdate);
+      }
+    )
+  );
+}
+
 Widget tagsInput(ctx, {
-    required tags,
+    required BuiltSet<Service> tags,
     required Map options,}) {
 
   var selected = ValueNotifier(tags);
@@ -88,10 +114,7 @@ Widget tagsInput(ctx, {
     } else {
       selected.value = selected.value.union(BuiltSet<Service>({v}));
     }
-
-    print("${selected.value}");
   };
-
   
   var tagsList = (selected, ctx) =>
   Wrap(
@@ -129,9 +152,12 @@ Widget tagsInput(ctx, {
         IconButton(
           constraints: BoxConstraints(),
           padding: EdgeInsets.zero,
-          onPressed: () => openDialog(ctx,
-            autow(tagsList, selected),
-          ),
+          onPressed: () {
+            openDialog(ctx,
+              autow(tagsList, selected),
+              onDone: () => emit(MasterUpdate(services: selected.value))
+            );
+          },
           icon: Icon(Icons.edit_outlined)
         )
       ]

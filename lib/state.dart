@@ -67,6 +67,7 @@ afterEvent(events, notifier) {
 
 
 class AppState {
+  static var preferedWorkLunchTime = ValueNotifier<BuiltSet>(BuiltSet());
   static var mainPage = ValueNotifier<Pages>(Pages.Masters);
 
   static void init() {
@@ -142,19 +143,19 @@ class AppState {
           id: "1",
           firstName: "Masha",
           services: serv(["1", "2", "3", "5"]),
-          workingHours7days: BuiltSet()
+          // workingHours7days: BuiltSet()
         ),
         Master(
           id: "2",
           firstName: "Dasha",
           services: serv(["1", "2"]),
-          workingHours7days: BuiltSet()
+          // workingHours7days: BuiltSet()
         ),
         Master(
           id: "3",
           firstName: "Pasha",
           services: serv(["4", "5"]),
-          workingHours7days: BuiltSet()
+          // workingHours7days: BuiltSet()
         ),
     ])
   );
