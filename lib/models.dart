@@ -72,16 +72,25 @@ class WorkingHours implements Comparable, Doc {
     this.date = DateTime(date.year, date.month, date.day);
   }
 
-  @override
-  int compareTo(o) => date.compareTo(o.date);
+  WorkingHours copyWith({date, work, lunch, dayOff, haveLunch,}) {
+    return WorkingHours(
+      date: date ?? this.date,
+      work:  work ?? this.work,
+      lunch: lunch ?? this.lunch,
+      dayOff: dayOff ?? this.dayOff,
+      haveLunch: haveLunch ?? this.haveLunch,
+   );
+ }
+ @override
+ int compareTo(o) => date.compareTo(o.date);
 
-  @override
-  bool operator ==(Object o) { 
-    return this.date == (o as WorkingHours).date;
-  }
+ @override
+ bool operator ==(Object o) { 
+   return this.date == (o as WorkingHours).date;
+ }
 
-  int get hashCode => date.hashCode;
+ int get hashCode => date.hashCode;
 
-  String toString() => "${format.format(date)} $work - $lunch";
+ String toString() => "${format.format(date)} $dayOff";
 }
 

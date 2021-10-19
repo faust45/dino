@@ -16,6 +16,7 @@ import 'screen/masters/masters_edit_screen.dart';
 
 void main() {
   // debugRepaintRainbowEnabled = true;
+  AppState.init();
   runApp(const MyApp());
 }
 

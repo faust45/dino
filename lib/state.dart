@@ -58,8 +58,8 @@ void emit(UIEvent event) {
   notifyAfterEvent[event.runtimeType]?.value++;
 }
 
-afterEvent(events, notifier) {
-  events.map((e) =>
+afterEvent(List events, ValueNotifier notifier) {
+  events.forEach((e) =>
     notifyAfterEvent[e] = notifier
   );
 }
@@ -72,6 +72,7 @@ class AppState {
 
   static void init() {
     Calendar.init();
+    Masters.init();
   }
   
   static var clients = ValueNotifier<BuiltSet<Client>>(BuiltSet([

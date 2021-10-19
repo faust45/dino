@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../state.dart';
 import '../models.dart';
 import '../utils.dart';
-
+import 'dart:collection';
 
 class Master implements Doc {
   final String id;
@@ -37,20 +37,18 @@ class Master implements Doc {
 }
 
 
-class MasterWorkingHoursUpdate with UIEventsDesc implements UIEvent {
+class MasterWorkingHoursToggle with UIEventsDesc implements UIEvent {
   WorkingHours wh;
   bool isOn;
   
-  MasterWorkingHoursUpdate(this.wh, this.isOn);
+  MasterWorkingHoursToggle(this.wh, this.isOn);
 
   perform() {
-    var hours = Masters.workingHours7days.value;
-    
-    Masters.workingHours7days.value = hours.rebuild(
-      (h) => h..remove(wh)..add(wh)
-    );
+    Masters.workingHours.value = BuiltSet();
+    Masters.workingHours.value = {wh.copyWith(dayOff: !isOn)}
+    .build()
+    .union(Masters.workingHours.value);
   }
-  
 }
   
 class MasterEditClose with UIEventsDesc implements UIEvent {
@@ -79,7 +77,8 @@ class MasterUpdate with UIEventsDesc implements UIEvent {
   MasterUpdate({this.services});
   
   perform() {
-    Masters.selected.value = Masters.selected.value?.copyWith(services: services);
+    Masters.selected.value =
+    Masters.selected.value?.copyWith(services: services);
   }
 
 }
@@ -95,26 +94,35 @@ class MasterEdit with UIEventsDesc implements UIEvent {
   }
   
   String get desc => "${master.id}";
-
 }
 
 
 class Masters {
   static var selected = ValueNotifier<Master?>(null);
-  static var workingHours7days = ValueNotifier<BuiltSet<WorkingHours>>(BuiltSet());
+  static var workingHours = ValueNotifier<BuiltSet<WorkingHours>>(BuiltSet());
   static var onWorkingHoursUpdate = ValueNotifier<int>(0);
-  
-  static BuiltSet<WorkingHours> masterWorkingHours7days(DateTime from) {
-    var defaultHours = DateRange.from(from)
-    .take(7)
-    .map((date) =>
-      WorkingHours(
-        date: date,
-        work:  [[9, 00], [18, 00]],
-        lunch: [[14, 00], [15, 00]]
-      )
-    ).toList();
 
-    return BuiltSet();
+  static void init() {
+    afterEvent([MasterWorkingHoursToggle], onWorkingHoursUpdate);
+  }
+ 
+  static Iterable<WorkingHours> masterWorkingHours7days(DateTime fromDate) {
+    var defaultHours = BuiltSet<WorkingHours>(
+      DateRange.from(fromDate)
+      .take(7)
+      .map((date) =>
+        WorkingHours(
+          date: date,
+          work:  [[9, 00], [18, 00]],
+          lunch: [[14, 00], [15, 00]]
+        )
+      )
+    );
+    
+    return SplayTreeSet.from(
+      workingHours.value
+      .intersection(defaultHours)
+      .union(defaultHours)
+    );
   }
 }

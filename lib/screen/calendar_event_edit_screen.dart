@@ -311,9 +311,6 @@ Widget servicesInput(ctx, eventServices, masterServices) {
           children: [
             SizedBox(height: 40),
             selectTags(tagsInp, masterServices),
-            Expanded(
-              child: SizedBox()
-            ),
             Row(
               children: [
                 Expanded(

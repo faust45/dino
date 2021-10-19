@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:built_collection/built_collection.dart';
 
 
-Widget workingHoursWeek(context, BuiltSet<WorkingHours> masterWorkingHours7days) {
+Widget workingHoursWeek(context, Iterable<WorkingHours> masterWorkingHours7days) {
   var format = DateFormat('E');
   var dm = DateFormat('dd');
 
@@ -62,7 +62,7 @@ Widget workingHoursWeek(context, BuiltSet<WorkingHours> masterWorkingHours7days)
           trailing: Switch(
             value: !wh.dayOff, 
             onChanged: (bool isOn) {
-              emit(MasterWorkingHoursUpdate(wh, isOn));
+              emit(MasterWorkingHoursToggle(wh, isOn));
             }
           ), 
         ),

@@ -5,6 +5,7 @@ import '../models.dart';
 import '../models/master.dart';
 import './rx_value.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:bottom_sheet/bottom_sheet.dart';
 
 
 var textDateLabel = TextStyle(fontSize: 20);
@@ -158,45 +159,48 @@ class FormInput {
 }
 
 Future<dynamic> openDialog(ctx, widget, {onDone}) async {
-  return showDialog(
+  return showModalBottomSheet(
+    isScrollControlled: true,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15)
+    ),
     context: ctx,
     builder: (BuildContext ctx) =>
-    Dialog(
-      child: Padding(
-        padding: EdgeInsets.only(left: 5, right: 5, bottom: 15, top: 15),
-        child: ConstrainedBox(
-          constraints: new BoxConstraints(
-            maxHeight: MediaQuery.of(ctx).size.height * 0.7,
-            maxWidth: MediaQuery.of(ctx).size.width * 0.8
-          ),
-          child: Column(
-            children: [
-              (widget is Function) ? widget(ctx) : widget,
-              Expanded(child: SizedBox()),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(ctx),
-                    child: Text("CANCEL"),
-                  ),
-                  SizedBox(width: 20),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(ctx);
+    Padding(
+      padding: EdgeInsets.only(left: 5, right: 5, bottom: 15, top: 15),
+      child: ConstrainedBox(
+        constraints: new BoxConstraints(
+          maxHeight: MediaQuery.of(ctx).size.height * 0.9,
+          maxWidth: MediaQuery.of(ctx).size.width * 0.8
+        ),
+        child: Column(
+          children: [
+            (widget is Function) ? widget(ctx) : widget,
+            Expanded(child: SizedBox()),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: Text("CANCEL"),
+                ),
+                SizedBox(width: 20),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
 
-                      if(onDone != null) {
-                        onDone();
-                      }
-                    },
-                    child: Text("DONE"),
-                  )
-                ]
-              )
-            ]
-          )  
-        )
+                    if(onDone != null) {
+                      onDone();
+                    }
+                  },
+                  child: Text("DONE"),
+                )
+              ]
+            )
+          ]
+        )  
       )
     )
+    
   );
 }

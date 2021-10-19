@@ -85,15 +85,15 @@ Widget masterDetails(Master doc, ctx) {
 
 Widget workingHours(ctx, Master doc) {
   return Container(
-    height: 600.0,
+    height: 600,
     child: PageView.builder(
       itemBuilder: (ctx, page) {
         var startDate = DateRange.from(today())
         .skip(page * 7)
         .first;
 
-        print(startDate);
         return autow((value, ctx) {
+            print("render working ");
             var workingHours = Masters.masterWorkingHours7days(startDate);
             return workingHoursWeek(ctx, workingHours);
         }, Masters.onWorkingHoursUpdate);
