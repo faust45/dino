@@ -141,25 +141,24 @@ Widget tagsInput(ctx, {
   );
   
   return Wrap(
-      spacing: 8.0,
-      runSpacing: 4.0,
-      children: [
-        for(var tag in tags)
-        Chip(
-          label: Text(tag.name)
-        ),
-        IconButton(
-          constraints: BoxConstraints(),
-          padding: EdgeInsets.zero,
-          onPressed: () {
-            openDialog(ctx,
-              autow(tagsList, selected),
-              onDone: () => emit(MasterUpdate(services: selected.value))
-            );
-          },
-          icon: Icon(Icons.edit_outlined)
-        )
-      ]
-    )
-  ;  
+    spacing: 8.0,
+    runSpacing: 4.0,
+    children: [
+      for(var tag in tags)
+      Chip(
+        label: Text(tag.name)
+      ),
+      IconButton(
+        constraints: BoxConstraints(),
+        padding: EdgeInsets.zero,
+        onPressed: () {
+          openDialog(ctx,
+            autow(tagsList, selected),
+            onDone: () => emit(MasterUpdate(services: selected.value))
+          );
+        },
+        icon: Icon(Icons.edit_outlined)
+      )
+    ]
+  );  
 }
