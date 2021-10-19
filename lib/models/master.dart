@@ -44,10 +44,12 @@ class MasterWorkingHoursToggle with UIEventsDesc implements UIEvent {
   MasterWorkingHoursToggle(this.wh, this.isOn);
 
   perform() {
-    Masters.workingHours.value = BuiltSet();
-    Masters.workingHours.value = {wh.copyWith(dayOff: !isOn)}
+    var hours = {wh.copyWith(dayOff: !isOn)}
     .build()
     .union(Masters.workingHours.value);
+    
+    Masters.workingHours.value = BuiltSet();
+    Masters.workingHours.value = hours;
   }
 }
   
@@ -80,7 +82,6 @@ class MasterUpdate with UIEventsDesc implements UIEvent {
     Masters.selected.value =
     Masters.selected.value?.copyWith(services: services);
   }
-
 }
 
 class MasterEdit with UIEventsDesc implements UIEvent {
@@ -107,22 +108,18 @@ class Masters {
   }
  
   static Iterable<WorkingHours> masterWorkingHours7days(DateTime fromDate) {
-    var defaultHours = BuiltSet<WorkingHours>(
+    return SplayTreeSet<WorkingHours>.from(
       DateRange.from(fromDate)
       .take(7)
-      .map((date) =>
-        WorkingHours(
-          date: date,
-          work:  [[9, 00], [18, 00]],
-          lunch: [[14, 00], [15, 00]]
-        )
+      .map((date) {
+          var wh = WorkingHours(
+            date: date,
+            work:  [[9, 00], [18, 00]],
+            lunch: [[14, 00], [15, 00]]
+          );
+          return workingHours.value.lookup(wh) ?? wh;
+        }
       )
-    );
-    
-    return SplayTreeSet.from(
-      workingHours.value
-      .intersection(defaultHours)
-      .union(defaultHours)
     );
   }
 }

@@ -93,7 +93,6 @@ Widget workingHours(ctx, Master doc) {
         .first;
 
         return autow((value, ctx) {
-            print("render working ");
             var workingHours = Masters.masterWorkingHours7days(startDate);
             return workingHoursWeek(ctx, workingHours);
         }, Masters.onWorkingHoursUpdate);
