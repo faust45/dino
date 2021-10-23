@@ -46,21 +46,26 @@ class MyApp extends StatelessWidget {
 }
 
 
-var pages = ~(_) {
-  switch(_(AppState.mainPage)) {
-    case Pages.Masters:
-      return [
-        MaterialPage(child: MastersScreen()),
-        if(_(Masters.selected) != null) 
-        MaterialPage(child: MastersEditScreen())
-      ];
-    case Pages.Calendar:
-      return [
-        MaterialPage(child: CalendarScreen()),
-        if(_(cal.Calendar.selectedEvent) != null) 
-        MaterialPage(child: CalendarEventEditScreen())
-      ];
-  };
-};
+var pages = ValueNotifier([
+    MaterialPage(child: MastersScreen()),
+    MaterialPage(child: MastersEditScreen())
+  ]
+);
+// var pages = ~(_) {
+//   switch(_(AppState.mainPage)) {
+//     case Pages.Masters:
+//       return [
+//         MaterialPage(child: MastersScreen()),
+//         if(_(Masters.selected) != null) 
+//         MaterialPage(child: MastersEditScreen())
+//       ];
+//     case Pages.Calendar:
+//       return [
+//         MaterialPage(child: CalendarScreen()),
+//         if(_(cal.Calendar.selectedEvent) != null) 
+//         MaterialPage(child: CalendarEventEditScreen())
+//       ];
+//   };
+// };
 
 

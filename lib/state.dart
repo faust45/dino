@@ -73,6 +73,8 @@ class AppState {
   static void init() {
     Calendar.init();
     Masters.init();
+    Masters.selected.value = AppState.masters.value.first;
+
   }
   
   static var clients = ValueNotifier<BuiltSet<Client>>(BuiltSet([

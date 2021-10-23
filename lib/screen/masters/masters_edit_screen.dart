@@ -78,9 +78,7 @@ Widget masterDetails(Master doc, ctx) {
           workingHours(ctx, doc),
         ]
       ),
-    )
-
-  ;
+    );
 }
 
 Widget workingHours(ctx, Master doc) {

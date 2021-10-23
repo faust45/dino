@@ -9,8 +9,8 @@ import 'package:time_range_picker/time_range_picker.dart' as tpicker;
 
 
 Widget workLunchTimeEdit(context) {
-  Value<tpicker.TimeRange> workTime = Value(null); 
-  Value<tpicker.TimeRange> lunchTime = Value(null);
+  ValueNotifier<tpicker.TimeRange?> workTime = ValueNotifier(null);
+  ValueNotifier<tpicker.n ?> lunchTime = ValueNotifier(null);
 
   Function timeRangeToMap = (tpicker.TimeRange t1, tpicker.TimeRange t2) {
     if (t1 != null && t2 != null) {
@@ -33,77 +33,78 @@ Widget workLunchTimeEdit(context) {
     appBar: AppBar(
       leading: BackButton(
         onPressed: () { 
-          Map tr = timeRangeToMap(workTime.value, lunchTime.value);
-          emit([Comp.Masters, Sub.WorkingHoursHistory, Act.New], tr);
-          Navigator.pop(context, tr);
+          // Map tr = timeRangeToMap(workTime.value, lunchTime.value);
+          // emit([Comp.Masters, Sub.WorkingHoursHistory, Act.New], tr);
+          // Navigator.pop(context, tr);
       }),
       title: Text("Work lunch time edit"),
     ),
     body: AutoBuild(builder: (context, get, track) =>
-      Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Flexible(
-                  child: TextField(
-                    controller: TextEditingController(
-                      text: "${fmt.timeRange(get(workTime))}"
-                    ),
-                    onTap: () async {
-                      var result = await tpicker.showTimeRangePicker(
-                        context: context,
-                      );
-                      workTime.value = result;
-                    },
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.access_time_outlined),
-                      labelText: "Working time",
-                    ),
-                  )
-                ),
-                Flexible(
-                  child: TextFormField(
-                    controller: TextEditingController(
-                      text: "${fmt.timeRange(get(lunchTime))}"
-                    ),
-                    onTap: () async {
-                      var result = await tpicker.showTimeRangePicker(
-                        context: context,
-                      );
-                      lunchTime.value = result;
-                    },
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.free_breakfast_outlined ),
-                      labelText: "Lunch time",
-                    ),
-                  )
-                ),
-              ] 
-            ),
-            SizedBox(height: 50),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text("or select from previous:"), 
-            ),
-            for(var wltime in get(S.preferedWorkLunchTime)) 
-            ListTile(
-              onTap: () {
-                Navigator.pop(context, wltime);
-              },
-              title: Row(
-                children: [
-                  SizedBox(width: 5),
-                  Text("${fmt.dtRange(wltime[#work])}"),
-                  SizedBox(width: 30),
-                  Text("${fmt.dtRange(wltime[#lunch])}")
-                ]
-              )
-            )
-          ]
-        )
-      )
+      Container()
+      // Padding(
+      //   padding: EdgeInsets.all(16.0),
+      //   child: Column(
+      //     children: [
+      //       Row(
+      //         children: [
+      //           Flexible(
+      //             child: TextField(
+      //               controller: TextEditingController(
+      //                 text: "${fmt.timeRange(get(workTime))}"
+      //               ),
+      //               onTap: () async {
+      //                 var result = await tpicker.showTimeRangePicker(
+      //                   context: context,
+      //                 );
+      //                 workTime.value = result;
+      //               },
+      //               decoration: const InputDecoration(
+      //                 icon: Icon(Icons.access_time_outlined),
+      //                 labelText: "Working time",
+      //               ),
+      //             )
+      //           ),
+      //           Flexible(
+      //             child: TextFormField(
+      //               controller: TextEditingController(
+      //                 text: "${fmt.timeRange(get(lunchTime))}"
+      //               ),
+      //               onTap: () async {
+      //                 var result = await tpicker.showTimeRangePicker(
+      //                   context: context,
+      //                 );
+      //                 lunchTime.value = result;
+      //               },
+      //               decoration: const InputDecoration(
+      //                 icon: Icon(Icons.free_breakfast_outlined ),
+      //                 labelText: "Lunch time",
+      //               ),
+      //             )
+      //           ),
+      //         ] 
+      //       ),
+      //       SizedBox(height: 50),
+      //       Align(
+      //         alignment: Alignment.centerLeft,
+      //         child: Text("or select from previous:"), 
+      //       ),
+      //       for(var wltime in get(S.preferedWorkLunchTime)) 
+      //       ListTile(
+      //         onTap: () {
+      //           Navigator.pop(context, wltime);
+      //         },
+      //         title: Row(
+      //           children: [
+      //             SizedBox(width: 5),
+      //             Text("${fmt.dtRange(wltime[#work])}"),
+      //             SizedBox(width: 30),
+      //             Text("${fmt.dtRange(wltime[#lunch])}")
+      //           ]
+      //         )
+      //       )
+      //     ]
+      //   )
+      // )
     )
   );
 }  

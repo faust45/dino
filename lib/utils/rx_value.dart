@@ -2,9 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import '../utils.dart';
 
-abstract class CallableWidget {
-  Widget call(); 
-}
 
 class Cell<T> extends ChangeNotifier implements ValueListenable<T> {
   Function _body;
@@ -58,6 +55,12 @@ class Cell<T> extends ChangeNotifier implements ValueListenable<T> {
     }
 
     return rx.value;
+  }
+}
+
+extension AutoW on Function {
+  AutoBuildW operator ~() {
+    return AutoBuildW(builder: this);
   }
 }
 
@@ -126,19 +129,56 @@ AutoBuild autow(f, rxval) {
   );
 } 
 
-extension AB on Function {
-  Cell operator ~() {
-    return Cell(this);
-  }
+class AutoBuildW<T> extends StatefulWidget {
+  const AutoBuildW({
+    Key? key,
+    required this.builder,
+  }) : super(key: key);
+
+  final Function builder;
+
+  @override
+  State<StatefulWidget> createState() => _AutoBuildWState<T>();
 }
 
-extension AutoBuildF on Function {
-  Widget get autobuild {
-    var widget = Cell(this);
-    return ValueListenableBuilder(
-      valueListenable: widget,
-      builder: (context, value, child) => value as Widget
-    );
+class _AutoBuildWState<T> extends State<AutoBuildW<T>> {
+  final Set<ValueNotifier> _listenToValues = {};
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(AutoBuildW<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    for(var v in _listenToValues) {
+      v.removeListener(_valueChanged);
+      _listenToValues.remove(v);
+    }
+    
+    super.dispose();
+  }
+
+  void _valueChanged() {
+    setState(() { });
+  }
+
+  dynamic _read(ValueNotifier notifier) {
+    if(!_listenToValues.contains(notifier)) {
+      _listenToValues.add(notifier);
+      notifier.addListener(_valueChanged);
+    }
+
+    return notifier.value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.builder(context, _read);
   }
 }
-

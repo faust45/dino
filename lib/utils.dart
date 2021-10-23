@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
+import 'package:time_range_picker/time_range_picker.dart' as tpicker;
 
 
 
@@ -25,7 +26,7 @@ Padding(
 );
 
 List<T> flatten<T>(Iterable<Iterable<T>> list) =>
-    [for (var sublist in list) ...sublist];
+[for (var sublist in list) ...sublist];
 
 Iterable<int> range(int from, int to) sync* {
   for (int i = from; i <= to; ++i) {
@@ -59,7 +60,15 @@ class fmt {
   static String time(DateTime date) {
     return ftime.format(date);    
   }
-  
+
+  static String timeRange (tpicker.TimeRange? t) {
+    if (t != null) {
+      return "${timeOfDay(t.startTime)} - ${timeOfDay(t.endTime)}";
+    } else {
+      return "";
+    }
+  }
+
   static String _addLeadingZero(int value) {
     if (value < 10)
     return '0$value';

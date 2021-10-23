@@ -66,11 +66,13 @@ class TextInp extends StatelessWidget {
       this.valid = const [],}
   ) {
     this.inp = ValueNotifier(null);
-    this.error = ~(_) {
-      return this.valid.map(
-        (v) => _(this.inp) != null ? v(_(this.inp)) : null
-      ).firstWhere(notNull, orElse: () => null);
-    };
+    this.error = Cell(
+      (_) {
+        return this.valid.map(
+          (v) => _(this.inp) != null ? v(_(this.inp)) : null
+        ).firstWhere(notNull, orElse: () => null);
+      }
+    );
   }
   
   Widget build(BuildContext ctx) {

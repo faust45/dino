@@ -117,6 +117,7 @@ class Masters {
             work:  [[9, 00], [18, 00]],
             lunch: [[14, 00], [15, 00]]
           );
+          
           return workingHours.value.lookup(wh) ?? wh;
         }
       )

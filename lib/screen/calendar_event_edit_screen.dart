@@ -207,7 +207,7 @@ Widget addNewClient(ctx) {
           Expanded(
             child: SizedBox(
               height: 35.0,
-              child: ~~(_) => ElevatedButton(
+              child: ElevatedButton(
                 child: Text("Add"),
                 onPressed: () => Navigator.pop(ctx,
                   cal.CalEventCreateClient(
